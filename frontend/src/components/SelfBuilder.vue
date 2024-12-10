@@ -84,7 +84,7 @@ export default {
       localStorage.setItem("selectedComponents", JSON.stringify(selectedComponents));
     },
     getImageUrl(component) {
-      if (component.img_url) {
+      if (component.img_url && !component.img_url.includes('/static/forever/img/no-image.png')) {
         return component.img_url;
       } else if (component.manufacturer === "Intel") {
         return require('@/assets/intelcpu.png');
@@ -95,7 +95,7 @@ export default {
       }
     },
     formatPrice(price) {
-      return `$${price.toFixed(2)}`;
+      return price !== null ? `$${price.toFixed(2)}` : 'Price not available';
     }
   }
 };
