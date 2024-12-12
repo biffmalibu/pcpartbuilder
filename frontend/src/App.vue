@@ -23,7 +23,7 @@
       <p class="mb-1">&copy; {{ currentYear }} Bradford Torpey</p>
       <p class="mb-0">
         <router-link to="/about" class="text-white">About</router-link> |
-        <a href="https://github.com/biffmalibu" target="_blank" class="text-white">
+        <a href="https://github.com/biffmalibu/pcpartbuilder" target="_blank" class="text-white">
           <img src="@/assets/github.png" alt="GitHub" class="github-icon" />
           GitHub
         </a>
@@ -48,6 +48,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: #f4f4f3;
 }
 .container {
   flex: 1;
