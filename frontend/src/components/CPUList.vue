@@ -400,7 +400,7 @@ export default {
       } else if (cpu.manufacturer === "AMD") {
         return require('@/assets/amdcpu.png');
       } else {
-        return require('@/assets/defaultcpu.jpg'); // Optional: Add a default image for other manufacturers
+        return require('@/assets/defaultcpu.jpg'); 
       }
     },
 
@@ -420,13 +420,12 @@ export default {
 </script>
 
 <style>
-/* yo */
 .container-fluid {
   padding: 20px;
 }
 
 .filter-sidebar {
-  padding: 20px;
+  padding: 0px 20px;
   background-color: #f4f4f3;
   margin-right: 20px;
 }
