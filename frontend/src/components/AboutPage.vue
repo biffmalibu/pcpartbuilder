@@ -3,7 +3,7 @@
       <h1>About PCPartBuilder</h1>
       <p>PCPartBuilder application created using Vue.js, Node.js, Express.js, and MySQL. This application was created by Bradford Torpey as a senior thesis project and remains a work in progress.</p>
       <div class="github-link">
-        <a href="https://github.com/your-github-username" target="_blank">
+        <a href="https://github.com/biffmalibu" target="_blank">
           <img src="@/assets/github.png" alt="GitHub" class="github-icon" />
           Visit my GitHub
         </a>
