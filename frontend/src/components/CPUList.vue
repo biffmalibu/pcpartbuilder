@@ -42,6 +42,14 @@
           <span>{{ filters.pcore_clock }}</span>
         </div>
         <div class="filter-group">
+          <label for="manufacturer">Manufacturer</label>
+          <select id="manufacturer" v-model="filters.manufacturer" @change="applyFilters">
+            <option value="">All</option>
+            <option value="Intel">Intel</option>
+            <option value="AMD">AMD</option>
+          </select>
+        </div>
+        <div class="filter-group">
           <label for="series">CPU Series</label>
           <select id="series" v-model="filters.series" @change="applyFilters">
             <option value="">All</option>
@@ -189,6 +197,7 @@ export default {
         l2_cache: 32,
         l3_cache: 256,
         pcore_clock: 4.7,
+        manufacturer: "",
         series: "",
         microarchitecture: "",
         core_family: "",
@@ -209,6 +218,7 @@ export default {
         this.filters.l2_cache !== 32 ||
         this.filters.l3_cache !== 256 ||
         this.filters.pcore_clock !== 4.7 ||
+        this.filters.manufacturer !== "" ||
         this.filters.series !== "" ||
         this.filters.microarchitecture !== "" ||
         this.filters.core_family !== "" ||
@@ -232,6 +242,7 @@ export default {
           (cpu.l2_cache !== null && cpu.l2_cache <= this.filters.l2_cache) &&
           (cpu.l3_cache !== null && cpu.l3_cache <= this.filters.l3_cache) &&
           (cpu.pcore_clock !== null && cpu.pcore_clock <= this.filters.pcore_clock) &&
+          (this.filters.manufacturer === "" || cpu.manufacturer === this.filters.manufacturer) &&
           (this.filters.series === "" || cpu.series === this.filters.series) &&
           (this.filters.microarchitecture === "" || cpu.microarchitecture === this.filters.microarchitecture) &&
           (this.filters.core_family === "" || cpu.core_family === this.filters.core_family) &&
@@ -309,6 +320,7 @@ export default {
         l2_cache: 32,
         l3_cache: 256,
         pcore_clock: 4.7,
+        manufacturer: "",
         series: "",
         microarchitecture: "",
         core_family: "",
@@ -408,14 +420,14 @@ export default {
 </script>
 
 <style>
+/* yo */
 .container-fluid {
   padding: 20px;
 }
+
 .filter-sidebar {
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: #f4f4f3;
   margin-right: 20px;
 }
 .filter-group {
