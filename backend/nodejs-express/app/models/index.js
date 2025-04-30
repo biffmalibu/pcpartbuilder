@@ -20,5 +20,12 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.cpus = require("./cpu.model.js")(sequelize, Sequelize);
+db.cpucoolers = require("./cpucooler.model.js")(sequelize, Sequelize);
+db.gpus = require("./gpu.model.js")(sequelize, Sequelize);
+db.cases = require("./cases.model.js")(sequelize, Sequelize);
+db.psus = require("./psu.model.js")(sequelize, Sequelize);
+db.memorys = require("./memory.model.js")(sequelize, Sequelize);
+db.motherboards = require("./motherboard.model.js")(sequelize, Sequelize);
+db.storages = require("./storage.model.js")(sequelize, Sequelize);
 
 module.exports = db;

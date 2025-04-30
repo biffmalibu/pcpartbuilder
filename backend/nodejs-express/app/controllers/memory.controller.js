@@ -1,42 +1,42 @@
 const db = require("../models");
-const CPU = db.cpus;
+const MEMORY = db.memorys;
 const Op = db.Sequelize.Op;
 
 
-// Retrieve all cpus from the database.
+// Retrieve all memorys from the database.
 exports.findAll = (req, res) => {
   const name = req.query.name;
   var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
-  CPU.findAll({ where: condition })
+  MEMORY.findAll({ where: condition })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving CPUs."
+          err.message || "Some error occurred while retrieving memorys."
       });
     });
 };
 
-// Find a single CPU with an id
+// Find a single memory with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  CPU.findByPk(id)
+  MEMORY.findByPk(id)
     .then(data => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find CPU with id=${id}.`
+          message: `Cannot find memory with id=${id}.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error retrieving CPU with id=" + id
+        message: "Error retrieving memory with id=" + id
       });
     });
 };

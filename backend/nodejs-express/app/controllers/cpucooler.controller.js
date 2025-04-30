@@ -1,42 +1,42 @@
 const db = require("../models");
-const CPU = db.cpus;
+const CPUCOOLER = db.cpucoolers;
 const Op = db.Sequelize.Op;
 
 
-// Retrieve all cpus from the database.
+// Retrieve all coolers from the database.
 exports.findAll = (req, res) => {
   const name = req.query.name;
   var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
-  CPU.findAll({ where: condition })
+  CPUCOOLER.findAll({ where: condition })
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving CPUs."
+          err.message || "Some error occurred while retrieving CPU coolers."
       });
     });
 };
 
-// Find a single CPU with an id
+// Find a single cooler with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  CPU.findByPk(id)
+  CPUCOOLER.findByPk(id)
     .then(data => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find CPU with id=${id}.`
+          message: `Cannot find CPU cooler with id=${id}.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error retrieving CPU with id=" + id
+        message: "Error retrieving CPU cooler with id=" + id
       });
     });
 };

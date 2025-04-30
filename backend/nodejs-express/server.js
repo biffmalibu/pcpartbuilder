@@ -32,6 +32,14 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/cpu.routes")(app);
+require("./app/routes/cpucooler.routes")(app);
+require("./app/routes/gpu.routes")(app);
+require("./app/routes/cases.routes")(app);
+require("./app/routes/psu.routes")(app);
+require("./app/routes/memory.routes")(app);
+require("./app/routes/motherboard.routes")(app);
+require("./app/routes/storage.routes")(app);
+require("./app/routes/build.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

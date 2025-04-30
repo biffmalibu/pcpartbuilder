@@ -1,13 +1,17 @@
 <template>
   <div class="homepage">
-    <h1>Welcome to the CPU Database</h1>
-    <p>This application allows you to browse, search, and view detailed information about various CPUs.</p>
+    <h1>Welcome to PCPartBuilder</h1>
+    <p>This application allows you to explore PC components and create builds manually with the Selfbuilder, or automatically with the Autobuilder.</p>
     <div class="button-container">
       <div class="button-column">
-        <router-link to="/cpus" class="btn btn-primary">View CPU List</router-link>
+        <router-link to="/autobuilder" class="btn btn-primary">
+          Auto Builder
+        </router-link>
       </div>
       <div class="button-column">
-        <router-link to="/selfbuilder" class="btn btn-secondary">Self Builder</router-link>
+        <router-link to="/selfbuilder" class="btn btn-secondary">
+          Self Builder
+        </router-link>
       </div>
     </div>
   </div>
@@ -15,7 +19,7 @@
 
 <script>
 export default {
-  name: "HomePage"
+  name: "HomePage",
 };
 </script>
 
@@ -40,10 +44,13 @@ export default {
 .button-column {
   flex: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 .btn {
   padding: 10px 20px;
   font-size: 1em;
+  margin-bottom: 10px;
 }
 </style>

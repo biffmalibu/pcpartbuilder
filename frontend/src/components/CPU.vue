@@ -1,9 +1,10 @@
 <template>
   <div v-if="currentCPU" class="cpu-details">
+    <button class="back-btn" @click="goBack">Back</button>
     <h2 class="cpu-name">{{ currentCPU.name }}</h2>
     <button 
-      class="add-remove-btn" 
-      :class="{ 'btn-success': !isAdded, 'btn-danger': isAdded }" 
+      class="cpu-add-remove-btn" 
+      :class="{ 'cpu-btn-success': !isAdded, 'cpu-btn-danger': isAdded }" 
       @click="toggleAddRemove"
     >
       {{ isAdded ? 'Remove' : 'Add' }}
@@ -64,7 +65,7 @@
           <label><strong>Integrated Graphics:</strong></label> {{ currentCPU.integrated_graphics }}
         </div>
         <div class="detail-item" v-if="currentCPU.max_supported_memory !== null">
-          <label><strong>Max Supported Memory:</strong></label> {{ currentCPU.max_supported_memory }}
+          <label><strong>Max Supported Memory:</strong></label> {{ currentCPU.max_supported_memory }} GB
         </div>
         <div class="detail-item" v-if="currentCPU.ecc_support !== null">
           <label><strong>ECC Support:</strong></label> {{ currentCPU.ecc_support }}
@@ -146,6 +147,9 @@ export default {
     checkIfAdded() {
       const selectedComponents = JSON.parse(localStorage.getItem("selectedComponents")) || {};
       this.isAdded = !!selectedComponents.CPU && selectedComponents.CPU.id === this.currentCPU.id;
+    },
+    goBack() {
+      this.$router.go(-1);
     }
   },
   mounted() {
@@ -192,7 +196,7 @@ export default {
 .detail-item label {
   font-weight: bold;
 }
-.add-remove-btn {
+.cpu-add-remove-btn {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -202,10 +206,21 @@ export default {
   cursor: pointer;
   color: white;
 }
-.btn-success {
+.cpu-btn-success {
   background-color: #28a745;
 }
-.btn-danger {
+.cpu-btn-danger {
   background-color: #dc3545;
+}
+.back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
 }
 </style>

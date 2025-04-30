@@ -18,7 +18,7 @@
         </div>
         <div class="filter-group">
           <label for="price">Price ($)</label>
-          <input type="range" id="price" v-model="filters.price" min="10" max="4260" step="10" @input="applyFilters">
+          <input type="range" id="price" v-model="filters.price" min="10" max="2830" step="10" @input="applyFilters">
           <span>{{ filters.price }}</span>
         </div>
         <div class="filter-group">
@@ -192,7 +192,7 @@ export default {
       itemsPerPage: 100,
       filters: {
         cores: 64,
-        price: 4260,
+        price: 2830,
         tdp: 280,
         l2_cache: 32,
         l3_cache: 256,
@@ -213,7 +213,7 @@ export default {
     filtersActive() {
       return (
         this.filters.cores !== 64 ||
-        this.filters.price !== 4260 ||
+        this.filters.price !== 2830 ||
         this.filters.tdp !== 280 ||
         this.filters.l2_cache !== 32 ||
         this.filters.l3_cache !== 256 ||
@@ -273,16 +273,16 @@ export default {
       return pages;
     },
     uniqueSeries() {
-      return [...new Set(this.cpus.map(cpu => cpu.series).filter(series => series !== null))];
+      return [...new Set(this.cpus.map(cpu => cpu.series).filter(series => series !== null))].sort();
     },
     uniqueMicroarchitectures() {
-      return [...new Set(this.cpus.map(cpu => cpu.microarchitecture).filter(microarchitecture => microarchitecture !== null))];
+      return [...new Set(this.cpus.map(cpu => cpu.microarchitecture).filter(microarchitecture => microarchitecture !== null))].sort();
     },
     uniqueCoreFamilies() {
-      return [...new Set(this.cpus.map(cpu => cpu.core_family).filter(core_family => core_family !== null))];
+      return [...new Set(this.cpus.map(cpu => cpu.core_family).filter(core_family => core_family !== null))].sort();
     },
     uniqueSockets() {
-      return [...new Set(this.cpus.map(cpu => cpu.socket).filter(socket => socket !== null))];
+      return [...new Set(this.cpus.map(cpu => cpu.socket).filter(socket => socket !== null))].sort();
     }
   },
   methods: {
@@ -310,12 +310,24 @@ export default {
     
     applyFilters() {
       this.currentPage = 1;
+      this.saveFiltersToLocalStorage();
+    },
+
+    saveFiltersToLocalStorage() {
+      localStorage.setItem("cpuFilters", JSON.stringify(this.filters));
+    },
+
+    loadFiltersFromLocalStorage() {
+      const savedFilters = JSON.parse(localStorage.getItem("cpuFilters"));
+      if (savedFilters) {
+        this.filters = savedFilters;
+      }
     },
 
     resetFilters() {
       this.filters = {
         cores: 64,
-        price: 4260,
+        price: 2830,
         tdp: 280,
         l2_cache: 32,
         l3_cache: 256,
@@ -414,6 +426,7 @@ export default {
     }
   },
   mounted() {
+    this.loadFiltersFromLocalStorage();
     this.retrieveCPUs();
   }
 };
