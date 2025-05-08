@@ -1,6 +1,9 @@
 <template>
   <div class="autobuilder-container">
-    <h1>Auto Builder</h1>
+    <div class="header">
+      <h1>Auto Builder</h1>
+      <button class="reset-button" @click="resetSelections">Reset</button>
+    </div>
 
     <!-- Price Range Slider -->
     <div class="section">
@@ -34,7 +37,7 @@
           v-for="chipset in chipsets"
           :key="chipset"
           :class="{ selected: selectedChipset === chipset }"
-          @click="selectedChipset = chipset"
+          @click="selectChipset(chipset)"
         >
           {{ chipset }}
         </button>
@@ -49,7 +52,7 @@
           v-for="(memory, label) in memoryOptions"
           :key="label"
           :class="{ selected: selectedMemory === memory }"
-          @click="selectedMemory = memory"
+          @click="selectMemory(memory)"
         >
           {{ label }}
         </button>
@@ -62,13 +65,13 @@
       <div class="button-group">
         <button
           :class="{ selected: watercooling === 'yes' }"
-          @click="watercooling = 'yes'"
+          @click="selectWatercooling('yes')"
         >
           Yes
         </button>
         <button
           :class="{ selected: watercooling === 'no' }"
-          @click="watercooling = 'no'"
+          @click="selectWatercooling('no')"
         >
           No
         </button>
@@ -83,7 +86,7 @@
           v-for="gpuOption in gpuOptions"
           :key="gpuOption"
           :class="{ selected: selectedGPU === gpuOption }"
-          @click="selectedGPU = gpuOption"
+          @click="selectGPU(gpuOption)"
         >
           {{ gpuOption }}
         </button>
@@ -98,7 +101,7 @@
           v-for="storageOption in storageOptions"
           :key="storageOption"
           :class="{ selected: selectedStorage === storageOption }"
-          @click="selectedStorage = storageOption"
+          @click="selectStorage(storageOption)"
         >
           {{ storageOption }}
         </button>
@@ -118,7 +121,6 @@
     <div v-if="builds.length" class="builds-section">
       <h3>Generated Builds:</h3>
       <div v-for="(build, index) in builds" :key="index" class="build">
-        
         <div v-if="build.error" class="error-message">
           <p>{{ build.error }}</p>
         </div>
@@ -173,20 +175,9 @@
             </tbody>
           </table>
           <p><strong>Total Price:</strong> ${{ (build.totalPrice || 0).toFixed(2) }}</p>
-          <button @click="useBuild(build)">Use Build</button>
+          <button class="use-build-button" @click="useBuild(build)">Use Build</button>
         </div>
       </div>
-    </div>
-    <!-- Request Body -->
-    <div v-if="requestBody" class="request-body">
-      <h3>Request Body:</h3>
-      <pre>{{ requestBody }}</pre>
-    </div>
-
-    <!-- API Output -->
-    <div v-if="apiResponse" class="api-response">
-      <h3>API Response:</h3>
-      <pre>{{ apiResponse }}</pre>
     </div>
   </div>
 </template>
@@ -196,7 +187,7 @@ export default {
   name: "AutoBuilder",
   data() {
     return {
-      priceRange: [1000, 2000],
+      priceRange: JSON.parse(localStorage.getItem("priceRange")) || [1000, 2000],
       chipsets: [
         "AMD Ryzen 5",
         "AMD Ryzen 7",
@@ -206,15 +197,15 @@ export default {
         "Intel Core i7",
         "Intel Core i9",
       ],
-      selectedChipset: null,
+      selectedChipset: localStorage.getItem("selectedChipset") || null,
       memoryOptions: {
         "16GB": "2x8GB",
         "32GB": "2x16GB",
         "64GB": "2x32GB",
         "128GB": "4x32GB",
       },
-      selectedMemory: null, // Default to null, will be set to 32GB if not selected
-      watercooling: "na",
+      selectedMemory: localStorage.getItem("selectedMemory") || null,
+      watercooling: localStorage.getItem("watercooling") || "na",
       gpuOptions: [
         "RTX 40 Series",
         "RTX 30 Series",
@@ -222,30 +213,58 @@ export default {
         "Radeon RX 7000 Series",
         "Radeon RX 6000 Series",
         "Radeon RX 5000 Series",
-        
       ],
-      selectedGPU: "na",
+      selectedGPU: localStorage.getItem("selectedGPU") || "na",
       storageOptions: ["1TB", "2TB", "3TB", "4TB", "6TB", "8+TB"],
-      selectedStorage: null,
+      selectedStorage: localStorage.getItem("selectedStorage") || null,
       apiResponse: null,
       requestBody: null,
-      warningMessages: [], // To display multiple warnings
-      builds: [], // To store the generated builds
+      warningMessages: [],
+      builds: [],
     };
   },
   methods: {
     filteredComponents(components) {
-      // Return all components except Storage
       return Object.fromEntries(
         Object.entries(components).filter(([key]) => key !== "Storage")
       );
     },
-    getComponentImageUrl(component) {
-      if (component.img_url && !component.img_url.includes("/static/forever/img/no-image.png")) {
-        return component.img_url;
-      } else {
-        return require("@/assets/noimage.png");
+    selectChipset(chipset) {
+      this.selectedChipset = chipset;
+      localStorage.setItem("selectedChipset", chipset);
+    },
+    selectMemory(memory) {
+      this.selectedMemory = memory;
+      localStorage.setItem("selectedMemory", memory);
+    },
+    selectWatercooling(option) {
+      this.watercooling = option;
+      localStorage.setItem("watercooling", option);
+    },
+    selectGPU(gpu) {
+      this.selectedGPU = gpu;
+      localStorage.setItem("selectedGPU", gpu);
+    },
+    selectStorage(storage) {
+      this.selectedStorage = storage;
+      localStorage.setItem("selectedStorage", storage);
+    },
+    adjustPriceRange(type) {
+      if (type === "min" && this.priceRange[1] - this.priceRange[0] < 200) {
+        this.priceRange[1] = +this.priceRange[0] + 200;
+      } else if (type === "max" && this.priceRange[1] - this.priceRange[0] < 200) {
+        this.priceRange[0] = this.priceRange[1] - 200;
       }
+      localStorage.setItem("priceRange", JSON.stringify(this.priceRange));
+    },
+    resetSelections() {
+      localStorage.removeItem("priceRange");
+      localStorage.removeItem("selectedChipset");
+      localStorage.removeItem("selectedMemory");
+      localStorage.removeItem("watercooling");
+      localStorage.removeItem("selectedGPU");
+      localStorage.removeItem("selectedStorage");
+      location.reload();
     },
     useBuild(build) {
       const selectedComponents = {
@@ -262,13 +281,6 @@ export default {
       };
       localStorage.setItem("selectedComponents", JSON.stringify(selectedComponents));
       window.location.href = "/selfbuilder";
-    },
-    adjustPriceRange(type) {
-      if (type === "min" && this.priceRange[1] - this.priceRange[0] < 200) {
-        this.priceRange[1] = +this.priceRange[0] + 200;
-      } else if (type === "max" && this.priceRange[1] - this.priceRange[0] < 200) {
-        this.priceRange[0] = this.priceRange[1] - 200;
-      }
     },
     async build() {
       this.warningMessages = [];
@@ -307,7 +319,6 @@ export default {
         });
         const data = await response.json();
 
-        // Process the builds from the API response
         this.builds = data.map((build) => {
           if (build.error) {
             return { error: build.error };
@@ -319,7 +330,7 @@ export default {
               Motherboard: build.motherboard,
               Cooler: build.cooler,
               Memory: build.memory,
-              Storage: Array.isArray(build.storage) ? build.storage : [build.storage], // Ensure Storage is always an array
+              Storage: Array.isArray(build.storage) ? build.storage : [build.storage],
               Case: build.case,
               PSU: build.psu,
             },
@@ -341,6 +352,22 @@ export default {
   padding: 20px;
   text-align: center;
 }
+.header {
+  display: flex;
+  justify-content: center; /* Center the title */
+  align-items: center;
+  position: relative; /* Allow positioning of the reset button */
+}
+
+.reset-button {
+  position: absolute; /* Position the button independently */
+  right: 0; /* Align it to the right */
+  top: 50%; /* Vertically center it */
+  transform: translateY(-50%); /* Adjust for vertical centering */
+  background-color: #dc3545;
+  color: white;
+}
+
 .section {
   margin-bottom: 20px;
 }
@@ -364,6 +391,14 @@ button.selected {
 .build-button {
   padding: 15px 30px;
   background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.use-build-button {
+  padding: 10px 20px;
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;

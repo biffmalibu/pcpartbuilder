@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
     img_url: {
       type: Sequelize.STRING
     },
-    product_url: {
+    storage_url: {
       type: Sequelize.STRING
     },
     price: {
